@@ -7,10 +7,15 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField]
     private Animator animator;
 
+    [Header("Movement")]
     [SerializeField]
-    private float movementSpeed = 10f;
-
-    private Vector2 direction;
+    private float movementSpeed;
+    [SerializeField]
+    private float maxSpeed;
+    [SerializeField]
+    private float linearDrag;
+    
+    private Vector2 horizontalDirection;
     private Rigidbody2D rb;
     private bool facingRight = true;
     
@@ -19,19 +24,33 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     void Update() {
-        direction = new Vector2(Input.GetAxis("Horizontal"),0);
+        horizontalDirection = new Vector2(Input.GetAxis("Horizontal"),0);
     }
 
     void FixedUpdate() {
-        MoveCharacter(direction);
+        MoveCharacter(horizontalDirection.x);
+        modifyPhysics();
     }
 
-    void MoveCharacter(Vector2 direction) {
-        rb.MovePosition((Vector2)transform.position + (direction * movementSpeed * Time.deltaTime));
-        animator.SetFloat("horizontal",Mathf.Abs(direction.x));
+    void MoveCharacter(float horizontalDirection) {
+        rb.AddForce(Vector2.right * horizontalDirection * movementSpeed);
+        animator.SetFloat("horizontal",Mathf.Abs(rb.velocity.x));
         
-        if((direction.x > 0 && !facingRight) || (direction.x < 0 && facingRight))
+        if((horizontalDirection > 0 && !facingRight) || (horizontalDirection < 0 && facingRight))
             Flip();
+
+        if(Mathf.Abs(rb.velocity.x) > maxSpeed) {
+            rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * maxSpeed,rb.velocity.y);
+        }
+    }
+
+    void modifyPhysics() {
+        bool changingDirection = (horizontalDirection.x > 0 && rb.velocity.x < 0) || (horizontalDirection.x < 0 && rb.velocity.x > 0);
+        if(Mathf.Abs(horizontalDirection.x) < (linearDrag / 10.0) || changingDirection) {
+            rb.drag = linearDrag;
+        } else {
+            rb.drag = 0;
+        }
     }
 
     void Flip() {
