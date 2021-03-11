@@ -73,18 +73,18 @@ public class PlayerMovement : MonoBehaviour {
 
     private void modifyPhysics() {
         bool changingDirection = (horizontalDirection.x > 0 && rb.velocity.x < 0) || (horizontalDirection.x < 0 && rb.velocity.x > 0);
-
+    
         if(isGrounded()) {
             if(Mathf.Abs(horizontalDirection.x) < (linearDrag / 11f) || changingDirection) {
                 rb.drag = linearDrag;
             } else {
-                rb.drag = 0;
+                rb.drag = 0.5f;
             }
             rb.gravityScale = 0;
         } else {
             rb.gravityScale = gravity;
-            rb.drag = linearDrag * 0.2f;
-            if(rb.velocity.y < 0) {
+            rb.drag = linearDrag * 0.15f;
+            if(rb.velocity.y < 0.5) {
                 rb.gravityScale = gravity * fallMiltiplier;
             }
             else if (rb.velocity.y >= 0 && !Input.GetKeyDown("w")) { 
@@ -110,6 +110,18 @@ public class PlayerMovement : MonoBehaviour {
             animator.Play("running");
         }else if(isGrounded() && !Input.GetButton("Horizontal")) {
             animator.Play("idle" );
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D other) {
+        if(other.gameObject.CompareTag("movingP")){
+            this.transform.SetParent(other.transform);
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D other) {
+        if(other.gameObject.CompareTag("movingP")){
+            this.transform.SetParent(null);
         }
     }
 }
