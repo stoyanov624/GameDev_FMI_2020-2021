@@ -5,9 +5,9 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour {
     
     [Header("Running")]
-    [SerializeField] private float movementSpeed = 50f;
-    [SerializeField] private float linearDrag = 12f;
-    [SerializeField] private float maxSpeed = 10f; // limiting the addForce.
+    [SerializeField] private float movementSpeed = 16f;
+    [SerializeField] private float linearDrag = 10f;
+    [SerializeField] private float maxSpeed = 8f; // limiting the addForce.
     private float horizontalDirection;
     private bool facingRight = true;
     private bool changingDirection => (horizontalDirection > 0 && !facingRight) || (horizontalDirection < 0 && facingRight);
@@ -27,19 +27,19 @@ public class PlayerMovement : MonoBehaviour {
     private BoxCollider2D boxCollider2D;
     private bool isOnFalling = false;
 
-    void Start(){
+    private void Start(){
         rb = GetComponent<Rigidbody2D>();
         boxCollider2D = GetComponent<BoxCollider2D>();
     }
 
-    void Update() {
+    private void Update() {
         horizontalDirection = getInput().x;
         if(Input.GetKeyDown("w")) {
             jumpTimer = Time.time + jumpDelay;
         }
     }
 
-    void FixedUpdate() {
+    private void FixedUpdate() {
         MoveCharacter(horizontalDirection);
 
         if(isGrounded()) {
@@ -122,6 +122,18 @@ public class PlayerMovement : MonoBehaviour {
         }else if(isGrounded() && !Input.GetButton("Horizontal")) {
             animator.Play("idle" );
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) {
+        if(other.gameObject.CompareTag("trampoline")){
+            StartCoroutine(Boost());
+        }
+    }
+
+    private IEnumerator Boost() {
+        yield return new WaitForSeconds(0.55f); 
+        rb.AddForce(Vector2.up * jumpForce * 2f, ForceMode2D.Impulse);
+        yield return 0;
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
