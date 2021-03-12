@@ -30,6 +30,7 @@ public class PlayerMovement : MonoBehaviour {
     private Vector2 horizontalDirection;
     private Rigidbody2D rb;
     private BoxCollider2D boxCollider2D;
+    private bool isOnFalling;
     
     void Start(){
         rb = GetComponent<Rigidbody2D>();

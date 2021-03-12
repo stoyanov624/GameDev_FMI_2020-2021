@@ -11,8 +11,8 @@ public class FallingPlatform : MonoBehaviour {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    void OnCollisionEnter2D(Collision2D col) {
-        if(col.collider.CompareTag("Player")){
+    void OnTriggerEnter2D(Collider2D col) {
+        if(col.gameObject.CompareTag("Player")){
             StartCoroutine(Fall());
             Destroy(gameObject, 10);
         }
