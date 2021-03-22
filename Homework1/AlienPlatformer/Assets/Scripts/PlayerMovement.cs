@@ -19,6 +19,8 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] private float lowJumpMultiplier = 3f;
     private float jumpDelay = 0.25f;
     private float jumpTimer; 
+    private bool canJumpTwice = true;
+    private bool jumpButtonClicked = false;
 
     [Header("Components")]
     [SerializeField] private Animator animator;
@@ -26,6 +28,8 @@ public class PlayerMovement : MonoBehaviour {
     private Rigidbody2D rb;
     private BoxCollider2D boxCollider2D;
     private bool isOnFalling = false;
+    private Coroutine trampolineCoroutine;
+
 
     private void Start(){
         rb = GetComponent<Rigidbody2D>();
@@ -34,7 +38,9 @@ public class PlayerMovement : MonoBehaviour {
 
     private void Update() {
         horizontalDirection = getInput().x;
+
         if(Input.GetKeyDown("w")) {
+            jumpButtonClicked = true;
             jumpTimer = Time.time + jumpDelay;
         }
     }
@@ -48,9 +54,16 @@ public class PlayerMovement : MonoBehaviour {
             ApplyAirLinearDrag();
         }
 
-        if(jumpTimer > Time.time && isGrounded()) {
-            Jump();
+        if(jumpButtonClicked) {
+           if(jumpTimer > Time.time && isGrounded()) {
+                canJumpTwice = true;
+                Jump();
+            }else if (!isGrounded() && canJumpTwice) {
+                canJumpTwice = false;
+                Jump();
+            }
         }
+        
         modifyJump();
     }
 
@@ -85,6 +98,7 @@ public class PlayerMovement : MonoBehaviour {
 
     private void Jump() {
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        jumpButtonClicked = false;
         jumpTimer = 0;
     }
 
@@ -126,13 +140,19 @@ public class PlayerMovement : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D other) {
         if(other.gameObject.CompareTag("trampoline")){
-            StartCoroutine(Boost());
+            trampolineCoroutine = StartCoroutine(Boost());
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other) {
+        if(other.gameObject.CompareTag("trampoline")){
+            StopCoroutine(trampolineCoroutine);
         }
     }
 
     private IEnumerator Boost() {
         yield return new WaitForSeconds(0.55f); 
-        rb.AddForce(Vector2.up * jumpForce * 2f, ForceMode2D.Impulse);
+        rb.AddForce(Vector2.up * jumpForce * 1.5f, ForceMode2D.Impulse);
         yield return 0;
     }
 
@@ -145,6 +165,10 @@ public class PlayerMovement : MonoBehaviour {
     private void OnCollisionExit2D(Collision2D other) {
         if(other.gameObject.CompareTag("movingP")){
             this.transform.SetParent(null);
+        }
+
+        if(other.gameObject.CompareTag("trampoline")){
+           
         }
     }
 }
