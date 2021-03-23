@@ -13,8 +13,9 @@ public class FallingPlatform : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D col) {
         if(col.gameObject.CompareTag("Player")){
+            LevelManager.instance.StartCoroutine(LevelManager.instance.RespawnPlatform(new Vector2(transform.position.x,transform.position.y),gameObject.tag));
             StartCoroutine(Fall());
-            Destroy(gameObject, 10);
+            Destroy(gameObject, 1);
         }
     }
 

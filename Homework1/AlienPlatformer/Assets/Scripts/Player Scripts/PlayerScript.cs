@@ -2,25 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour {
+public class PlayerScript : MonoBehaviour {
     
     [SerializeField] internal PlayerRunning runningScript;
-    [SerializeField] internal PlayerInput inputScript;
     [SerializeField] internal PlayerJump jumpingScript;
     [SerializeField] internal PlayerCollision collisionScript;
 
 
     [Header("Components")]
     [SerializeField] private Animator animator;
-    internal Rigidbody2D rb;
-    internal BoxCollider2D boxCollider2D;
+    internal Rigidbody2D playerRb;
 
-    private void Awake(){
-        rb = GetComponent<Rigidbody2D>();
-        boxCollider2D = GetComponent<BoxCollider2D>();
+    void Awake(){
+        playerRb = GetComponent<Rigidbody2D>();
     }
 
-    private void FixedUpdate() {
+    void FixedUpdate() {
         if(collisionScript.isOnGround) {
             runningScript.ApplyGroundLinearDrag();
         }else {
@@ -33,11 +30,11 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void AnimateMovement() {
-        animator.SetFloat("vertical",Mathf.Abs(rb.velocity.y));
+        animator.SetFloat("vertical",Mathf.Abs(playerRb.velocity.y));
 
-        if(collisionScript.isOnGround && inputScript.isRunning) {
+        if(collisionScript.isOnGround && runningScript.isRunning) {
             animator.Play("running");
-        }else if(collisionScript.isOnGround && !inputScript.isRunning) {
+        }else if(collisionScript.isOnGround && !runningScript.isRunning) {
             animator.Play("idle" );
         }
     }

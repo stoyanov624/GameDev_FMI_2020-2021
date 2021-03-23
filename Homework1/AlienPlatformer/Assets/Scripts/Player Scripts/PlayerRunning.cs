@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerRunning : MonoBehaviour {
 
     
-    [SerializeField] internal PlayerMovement playerScript;
+    [SerializeField] internal PlayerScript playerScript;
     [SerializeField] internal PlayerCollision collisionScript;
 
     [Header("Running")]
@@ -14,13 +14,11 @@ public class PlayerRunning : MonoBehaviour {
     [SerializeField] private float maxSpeed = 8f; // limiting the addForce.
     private float horizontalDirection;
     private bool facingRight = true;
+    internal bool isRunning;
     private bool changingDirection => (horizontalDirection > 0 && !facingRight) || (horizontalDirection < 0 && facingRight);
 
-    void Start() {
-
-    }
-
     void Update() {
+        isRunning = Input.GetButton("Horizontal");
         horizontalDirection = getInput().x;
     }
 
@@ -29,10 +27,10 @@ public class PlayerRunning : MonoBehaviour {
     }
 
     private void MoveCharacter(float horizontalDirection) {
-        playerScript.rb.AddForce(Vector2.right * horizontalDirection * movementSpeed);
+        playerScript.playerRb.AddForce(Vector2.right * horizontalDirection * movementSpeed);
         
-        if(Mathf.Abs(playerScript.rb.velocity.x) > maxSpeed) {
-            playerScript.rb.velocity = new Vector2(Mathf.Sign(playerScript.rb.velocity.x) * maxSpeed,playerScript.rb.velocity.y);
+        if(Mathf.Abs(playerScript.playerRb.velocity.x) > maxSpeed) {
+            playerScript.playerRb.velocity = new Vector2(Mathf.Sign(playerScript.playerRb.velocity.x) * maxSpeed,playerScript.playerRb.velocity.y);
         }
         
         if(changingDirection) {
@@ -42,9 +40,9 @@ public class PlayerRunning : MonoBehaviour {
 
     internal void ApplyGroundLinearDrag() {
         if (Mathf.Abs(horizontalDirection) < 0.4f || changingDirection) {
-            playerScript.rb.drag = linearDrag;
+            playerScript.playerRb.drag = linearDrag;
         }else {
-            playerScript.rb.drag = 0;
+            playerScript.playerRb.drag = 0;
         }
     }
 

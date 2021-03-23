@@ -6,9 +6,10 @@ TagManager:
   tags:
   - animaton
   - movingP
-  - fallingP
   - trampoline
   - Lava
+  - smallFallingP
+  - largeFallingP
   layers:
   - Default
   - TransparentFX

@@ -4,30 +4,29 @@ using UnityEngine;
 
 public class PlayerJump : MonoBehaviour {
     
-    [SerializeField] internal PlayerMovement playerScript;
-    [SerializeField] internal PlayerInput playerInputScript;
+    [SerializeField] internal PlayerScript playerScript;
     [SerializeField] internal PlayerCollision collisionScript;
 
     [Header("Jumping")]
-    [SerializeField] internal float jumpForce = 12f; 
     [SerializeField] private float airLinearDrag = 2.5f;
     [SerializeField] private float fallMiltiplier = 5f;
     [SerializeField] private float lowJumpMultiplier = 3f;
+    [SerializeField] internal float jumpForce = 12f; 
     private float jumpDelay = 0.25f;
+    private bool isJumping = false;
     private float jumpTimer; 
     private bool canJumpTwice = true;
 
-    void Start() {
 
-    }
-
-    void Update() {
-    }
-
-    void FixedUpdate() {
-        if(playerInputScript.isJumping) {
+    void Update () {
+        if(Input.GetKeyDown("w")) {
+            isJumping = true;
             jumpTimer = Time.time + jumpDelay;
-           if(collisionScript.isGrounded()) {
+        }
+    }
+    void FixedUpdate() {
+        if(isJumping) {
+           if(jumpTimer > Time.time && collisionScript.isOnGround) {
                 canJumpTwice = true;
                 Jump();
             }else if (!collisionScript.isOnGround && canJumpTwice) {
@@ -40,27 +39,28 @@ public class PlayerJump : MonoBehaviour {
     }
     
     private void Jump() {
-        playerScript.rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        playerScript.playerRb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        isJumping = false;
         jumpTimer = 0;
     }
 
     private void modifyJump() {
         if(collisionScript.isOnFalling) {
-            playerScript.rb.gravityScale = fallMiltiplier + 2f;
+            playerScript.playerRb.gravityScale = fallMiltiplier + 2f;
         } else {
-            if(playerScript.rb.velocity.y < 0) {
-                playerScript.rb.gravityScale = fallMiltiplier;
+            if(playerScript.playerRb.velocity.y < 0) {
+                playerScript.playerRb.gravityScale = fallMiltiplier;
             }
-            else if(playerScript.rb.velocity.y > 0 && !playerInputScript.isJumping) {
-                playerScript.rb.gravityScale = lowJumpMultiplier;
+            else if(playerScript.playerRb.velocity.y > 0 && !isJumping) {
+                playerScript.playerRb.gravityScale = lowJumpMultiplier;
             } 
             else {
-            playerScript.rb.gravityScale = 1.25f;
+            playerScript.playerRb.gravityScale = 1.25f;
             }
         }
     }
 
     internal void ApplyAirLinearDrag() {
-        playerScript.rb.drag = airLinearDrag;
+        playerScript.playerRb.drag = airLinearDrag;
     }
 }

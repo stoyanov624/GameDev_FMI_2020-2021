@@ -155,7 +155,7 @@ PrefabInstance:
     - target: {fileID: 5674400452996622565, guid: 2b25ede3467c8bf4e837751bf2f5e051,
         type: 3}
       propertyPath: m_TagString
-      value: fallingP
+      value: smallFallingP
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b25ede3467c8bf4e837751bf2f5e051, type: 3}
