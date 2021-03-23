@@ -8,6 +8,7 @@ TagManager:
   - movingP
   - fallingP
   - trampoline
+  - Lava
   layers:
   - Default
   - TransparentFX

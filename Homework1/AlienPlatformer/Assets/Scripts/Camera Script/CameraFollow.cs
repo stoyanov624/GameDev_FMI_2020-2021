@@ -35,6 +35,7 @@ public class CameraFollow : MonoBehaviour {
         LimitCamera();
         
     }
+    
 
     private void LimitCamera() {
         transform.position = new Vector3
@@ -43,5 +44,11 @@ public class CameraFollow : MonoBehaviour {
             Mathf.Clamp(transform.position.y, bottomLimit,topLimit),
             transform.position.z
         );
+    }
+
+    public void setPlayerToFollow(GameObject otherPlayer) {
+        player = otherPlayer;
+        playerTransform = player.GetComponent<Transform>();
+        playerRb = player.GetComponent<Rigidbody2D>();
     }
 }
