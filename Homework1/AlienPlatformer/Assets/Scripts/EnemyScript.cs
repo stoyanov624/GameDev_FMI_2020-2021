@@ -5,123 +5,104 @@ using UnityEngine;
 
 public class EnemyScript : MonoBehaviour {
 
-    const string LEFT = "left";
-    const string RIGHT = "right";
-    private string facingDirection;
-    private Vector3 baseScale;
+    [Header("Patrol")]
+    [SerializeField] private float movementSpeed;
+    private float moveDirection = 1;
+    private bool facingRight = true;
+    [SerializeField] Transform edgeCheckPoint;
+    [SerializeField] Transform obstacleCheckPoint;
+    [SerializeField] float checkRadius;
+    [SerializeField] LayerMask groundLayer;
+    [SerializeField] LayerMask obstacleLayer;
+    private bool isNearEdge;
+    private bool isNearObstacle;
 
+    [Header("Jump Attack")]
+    [SerializeField] float jumpForce;
     [SerializeField] Transform player;
-    [SerializeField] Transform castPos;
-    [SerializeField] float movementSpeed;
-    [SerializeField] float agroRange;
-    [SerializeField] float distFromObstacle;
+    
+    [Header("Seeing Player")]
+    [SerializeField] Vector2 lineOfSite;
+    [SerializeField] LayerMask playerLayer;
+    private bool canSeePlayer;
+    private bool isAbovePlayer;
+    private bool shouldAttack;
+
+    [Header("Components")]
     [SerializeField] Animator animator;
+    private BoxCollider2D enemyBoxCollider2D;
     private Rigidbody2D enemyRb;
 
     void Start() {
-        facingDirection = RIGHT;
-        baseScale = transform.localScale;
-        enemyRb = GetComponent<Rigidbody2D>();    
-        animator = GetComponent<Animator>();
+        enemyRb = GetComponent<Rigidbody2D>();
+        enemyBoxCollider2D = GetComponent<BoxCollider2D>();
     }
 
-    // Update is called once per frame
     void FixedUpdate() {
-        float distanceToPlayer = Vector2.Distance(transform.position, player.position);   
-        float speedDirection = movementSpeed;
-        if(facingDirection == LEFT) {
-            speedDirection = -movementSpeed;
+        isNearEdge = !(Physics2D.OverlapCircle(edgeCheckPoint.position,checkRadius,groundLayer));
+        isNearObstacle = (Physics2D.OverlapCircle(obstacleCheckPoint.position,checkRadius,obstacleLayer));
+        canSeePlayer = Physics2D.OverlapBox(transform.position,lineOfSite,0,playerLayer);
+        isAbovePlayer = transform.position.y > (player.position.y + 0.5f);
+        shouldAttack = canSeePlayer && isNearEdge && isAbovePlayer;
+
+        AnimateMovement();
+        
+        if(shouldAttack) {
+           JumpAttack();
+        }else {
+           Patrol();
         }
+    }
 
-        enemyRb.velocity = new Vector2(speedDirection,enemyRb.velocity.y);
+    void JumpAttack() {
+        FlipTowardsPlayer();
+        float distanceFromPlayer = Vector2.Distance(transform.position,player.position);
+        if(isGrounded()) {
+            enemyRb.AddForce(new Vector2(distanceFromPlayer,jumpForce),ForceMode2D.Impulse);
+        }
+    }
 
-        if(isHittingWall() || isNearEdge()) {
-            if (facingDirection == LEFT) {
-                ChangeFacingDirection(RIGHT);
+    void AnimateMovement() {
+        animator.SetFloat("vertical",Mathf.Abs(enemyRb.velocity.y));
+        animator.SetFloat("horizontal", Mathf.Abs(enemyRb.velocity.x));
+        animator.SetBool("isGrounded",isGrounded());
+    }
+    
+    private void Patrol() {
+        if(isGrounded()) {
+            if((isNearEdge || isNearObstacle) && facingRight) {
+                Flip();
+            }else if((isNearEdge || isNearObstacle) && !facingRight) {
+                Flip();
             }
-            else if (facingDirection == RIGHT) {
-                ChangeFacingDirection(LEFT);
-            }
+            enemyRb.velocity = new Vector2(movementSpeed*moveDirection,enemyRb.velocity.y);
         }
-        
-        // if(distanceToPlayer < agroRange) {
-        //     AtackPlayer();
-        // }else {
-        //     StopAtackingPlayer();
-        // }
     }
 
-    private void ChangeFacingDirection(string newDirection) {
-        Vector3 newScale = baseScale;
-        if (newDirection == LEFT) {
-            newScale.x = -baseScale.x;
-        }
-        else if (newDirection == RIGHT) {
-            newScale.x = baseScale.x;
-        }
-
-        transform.localScale = newScale;
-        facingDirection = newDirection;
+    private void Flip() {
+        moveDirection *= -1;
+        facingRight = !facingRight;
+        transform.Rotate(0,180,0);
     }
 
-    private bool isHittingWall() {
-        bool hittingWall = false;
-
-        float castDist = distFromObstacle;
-        if(facingDirection == LEFT) {
-            castDist = -distFromObstacle;
-        }else {
-            castDist = distFromObstacle;
+    private void FlipTowardsPlayer() {
+        float playerPosition = player.position.x - transform.position.x;
+        if(playerPosition < 0 && facingRight) {
+            Flip();
+        }else if(playerPosition > 0 && !facingRight) {
+            Flip();
         }
-
-        Vector3 targetPos = castPos.position;
-        targetPos.x += castDist;
-
-        Debug.DrawLine(castPos.position,targetPos,Color.red);
-        
-        if(Physics2D.Linecast(castPos.position,targetPos, 1 << LayerMask.NameToLayer("Ground"))) {
-            hittingWall = true;
-        }else {
-            hittingWall = false;
-        }
-
-        return hittingWall;
     }
 
-    private bool isNearEdge() {
-         bool nearEdge = true;
-
-        float castDist = distFromObstacle;
-
-        Vector3 targetPos = castPos.position;
-        targetPos.y -= castDist;
-
-        Debug.DrawLine(castPos.position,targetPos,Color.blue);
-        
-        if(Physics2D.Linecast(castPos.position,targetPos, 1 << LayerMask.NameToLayer("Ground"))) {
-            nearEdge = false;
-        }else {
-            nearEdge = true;
-        }
-
-        return nearEdge;
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(edgeCheckPoint.position,checkRadius);
+        Gizmos.DrawWireSphere(obstacleCheckPoint.position,checkRadius);
+        Gizmos.DrawWireCube(transform.position,lineOfSite);
     }
 
-    private void AtackPlayer()
-    {
-        // if(transform.position.x < player.position.x) {
-        //     enemyRb.velocity = new Vector2(movementSpeed,0);
-        //     transform.localScale = new Vector2(transform.localScale.x, transform.localScale.y);
-        // }else {
-        //     enemyRb.velocity = new Vector2(-movementSpeed,0);
-        //     transform.localScale = new Vector2(transform.localScale.x * -1f,transform.localScale.y);
-        // }
-        // animator.Play("EnemyRunning");
-    }
-
-    private void StopAtackingPlayer()
-    {
-        // enemyRb.velocity = Vector2.zero;
-        // animator.Play("EnemyIdle");
+    private bool isGrounded() {
+        RaycastHit2D reycastHit2d = Physics2D.BoxCast(enemyBoxCollider2D.bounds.center,enemyBoxCollider2D.bounds.size,0f,Vector2.down,.1f,groundLayer);
+        return reycastHit2d.collider != null;
     }
 }

@@ -130,9 +130,7 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void AnimateMovement() {
-       
-
-        if(isGrounded() && Input.GetButton("Horizontal")) {
+       if(isGrounded() && Input.GetButton("Horizontal")) {
             animator.Play("running");
         }else if(isGrounded() && !Input.GetButton("Horizontal")) {
             animator.Play("idle" );
