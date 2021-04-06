@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour {
     private float jumpTimer; 
     private bool canJumpTwice = true;
     private bool jumpButtonClicked = false;
+    private bool isHurt = false;
 
     [Header("Components")]
     [SerializeField] private Animator animator;
@@ -39,7 +40,7 @@ public class PlayerMovement : MonoBehaviour {
     private void Update() {
         horizontalDirection = getInput().x;
 
-        if(Input.GetKeyDown("w")) {
+        if(Input.GetKeyDown("w") && !isHurt) {
             jumpButtonClicked = true;
             jumpTimer = Time.time + jumpDelay;
         }
@@ -163,15 +164,20 @@ public class PlayerMovement : MonoBehaviour {
             this.transform.SetParent(other.transform);
         }
 
-        if(other.gameObject.CompareTag("spikes")) {
+        if(other.gameObject.CompareTag("spikes") || other.gameObject.CompareTag("enemy")) {
+            isHurt = true;
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            animator.SetTrigger("hurt");
+            animator.Play("hurt");
         }
     }
 
     private void OnCollisionExit2D(Collision2D other) {
         if(other.gameObject.CompareTag("movingP")){
             this.transform.SetParent(null);
+        }
+
+        if(other.gameObject.CompareTag("spikes") || other.gameObject.CompareTag("enemy")) {
+            isHurt = false;
         }
     }
 }

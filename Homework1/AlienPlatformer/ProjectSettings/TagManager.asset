@@ -11,6 +11,7 @@ TagManager:
   - smallFallingP
   - largeFallingP
   - spikes
+  - enemy
   layers:
   - Default
   - TransparentFX

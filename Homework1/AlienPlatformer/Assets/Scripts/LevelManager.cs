@@ -5,7 +5,7 @@ public class LevelManager : MonoBehaviour {
     public static LevelManager instance;
 
     [SerializeField] private Transform playerRespawnPoint;
-    [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private Transform playerTransform;
     [SerializeField] private GameObject smallFallingPlatformPrefab;
     [SerializeField] private GameObject largeFallingPlatformPrefab;
     [SerializeField] private CameraFollow cam;
@@ -15,8 +15,8 @@ public class LevelManager : MonoBehaviour {
     }
 
     public void Respawn() {
-        GameObject player = Instantiate(playerPrefab, playerRespawnPoint.position, Quaternion.identity);
-        cam.setPlayerToFollow(player);
+        playerTransform.position = playerRespawnPoint.position;
+        cam.setPlayerToFollow(playerTransform.gameObject);
     }
 
     public IEnumerator RespawnPlatform(Vector2 respawnPosition, string platformTag) {
