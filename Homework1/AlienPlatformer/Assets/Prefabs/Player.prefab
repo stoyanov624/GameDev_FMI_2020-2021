@@ -105,6 +105,8 @@ MonoBehaviour:
   groundLayerMask:
     serializedVersion: 2
     m_Bits: 256
+  lives: 3
+  heartSystem: {fileID: 0}
 --- !u!114 &98055764
 MonoBehaviour:
   m_ObjectHideFlags: 0

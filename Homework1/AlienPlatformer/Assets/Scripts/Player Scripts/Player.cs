@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour {
+public class Player : MonoBehaviour {
     
     [Header("Running")]
     [SerializeField] private float movementSpeed = 16f;
@@ -21,7 +21,6 @@ public class PlayerMovement : MonoBehaviour {
     private float jumpTimer; 
     private bool canJumpTwice = true;
     private bool jumpButtonClicked = false;
-    private bool isHurt = false;
 
     [Header("Components")]
     [SerializeField] private Animator animator;
@@ -29,7 +28,9 @@ public class PlayerMovement : MonoBehaviour {
 
     [Header("UI")]
     [SerializeField] private int lives;
+    [SerializeField] private int keysToPick;
     [SerializeField] private HeartSystem heartSystem;
+    [SerializeField] private KeySystem keySystem;
 
     private Rigidbody2D rb;
     private BoxCollider2D boxCollider2D;
@@ -41,28 +42,35 @@ public class PlayerMovement : MonoBehaviour {
         rb = GetComponent<Rigidbody2D>();
         boxCollider2D = GetComponent<BoxCollider2D>();
         heartSystem.DrawHearts(lives);
+        keySystem.DrawKeys(keysToPick);
     }
 
     private void Update() {
         horizontalDirection = getInput().x;
 
-        if(Input.GetKeyDown("w") && !isHurt) {
+        if(Input.GetKeyDown("w")) {
             jumpButtonClicked = true;
             jumpTimer = Time.time + jumpDelay;
         }
-
+        
         if(lives == 0) {
             lives = heartSystem.getMaxLives();
+            keysToPick = keySystem.getMaxKeys();
+            keySystem.LoseKeys();
             LevelManager.instance.Respawn();
         }
+
+        AnimateMovement();
     }
 
     private void FixedUpdate() {
         MoveCharacter(horizontalDirection);
-
+        
         if(isGrounded()) {
+            animator.SetBool("grounded",true);
             ApplyGroundLinearDrag();
         }else {
+            animator.SetBool("grounded",false);
             ApplyAirLinearDrag();
         }
 
@@ -85,7 +93,6 @@ public class PlayerMovement : MonoBehaviour {
     
     private void MoveCharacter(float horizontalDirection) {
         rb.AddForce(Vector2.right * horizontalDirection * movementSpeed);
-        AnimateMovement();
         
         if(Mathf.Abs(rb.velocity.x) > maxSpeed) {
             rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * maxSpeed,rb.velocity.y);
@@ -141,18 +148,26 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void AnimateMovement() {
-       if(isGrounded() && Input.GetButton("Horizontal")) {
-            animator.Play("running");
-        }else if(isGrounded() && !Input.GetButton("Horizontal")) {
-            animator.Play("idle" );
-        }
+        if(isGrounded()) {
+            animator.SetBool("grounded",true);
 
-        animator.SetFloat("vertical",Mathf.Abs(rb.velocity.y));
+            if(Input.GetButton("Horizontal")) {
+                animator.Play("running");
+            }else {
+                animator.Play("idle");
+            }
+        }else {
+            animator.SetBool("grounded",false);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
         if(other.gameObject.CompareTag("trampoline")){
             trampolineCoroutine = StartCoroutine(Boost());
+        }
+
+        if(other.gameObject.CompareTag("Key")) {
+            keySystem.PickKey(--keysToPick);
         }
     }
 
@@ -174,20 +189,16 @@ public class PlayerMovement : MonoBehaviour {
         }
 
         if(other.gameObject.CompareTag("spikes") || other.gameObject.CompareTag("enemy")) {
-            isHurt = true;
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             animator.Play("hurt");
             heartSystem.TakeDamage(--lives);
+            
         }
     }
 
     private void OnCollisionExit2D(Collision2D other) {
         if(other.gameObject.CompareTag("movingP")){
             this.transform.SetParent(null);
-        }
-
-        if(other.gameObject.CompareTag("spikes") || other.gameObject.CompareTag("enemy")) {
-            isHurt = false;
         }
     }
 }

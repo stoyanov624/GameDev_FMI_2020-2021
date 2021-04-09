@@ -14,6 +14,7 @@ public class MovingPlatform : MonoBehaviour {
     }
     
     void Update() {
-        transform.position = Vector2.Lerp(startPosition,endPosition, Mathf.PingPong(Time.time * movingSpeed,1f));        
+        transform.position = Vector2.Lerp(startPosition,endPosition, 
+                                          Mathf.PingPong(Time.time * movingSpeed,1f));        
     }
 }
