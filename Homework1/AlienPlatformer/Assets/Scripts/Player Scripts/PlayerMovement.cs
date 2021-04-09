@@ -26,15 +26,21 @@ public class PlayerMovement : MonoBehaviour {
     [Header("Components")]
     [SerializeField] private Animator animator;
     [SerializeField] private LayerMask groundLayerMask;
+
+    [Header("UI")]
+    [SerializeField] private int lives;
+    [SerializeField] private HeartSystem heartSystem;
+
     private Rigidbody2D rb;
     private BoxCollider2D boxCollider2D;
     private bool isOnFalling = false;
     private Coroutine trampolineCoroutine;
 
 
-    private void Start(){
+    private void Start() {
         rb = GetComponent<Rigidbody2D>();
         boxCollider2D = GetComponent<BoxCollider2D>();
+        heartSystem.DrawHearts(lives);
     }
 
     private void Update() {
@@ -43,6 +49,11 @@ public class PlayerMovement : MonoBehaviour {
         if(Input.GetKeyDown("w") && !isHurt) {
             jumpButtonClicked = true;
             jumpTimer = Time.time + jumpDelay;
+        }
+
+        if(lives == 0) {
+            lives = heartSystem.getMaxLives();
+            LevelManager.instance.Respawn();
         }
     }
 
@@ -166,6 +177,7 @@ public class PlayerMovement : MonoBehaviour {
             isHurt = true;
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             animator.Play("hurt");
+            heartSystem.TakeDamage(--lives);
         }
     }
 
