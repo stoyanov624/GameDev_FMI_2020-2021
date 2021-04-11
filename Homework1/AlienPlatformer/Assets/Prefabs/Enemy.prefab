@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 612498131108612354}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: EdgeCheck
   m_TagString: Untagged
   m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 612498131293116345}
   - component: {fileID: 612498131293116346}
   - component: {fileID: 612498131293116347}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Enemy
   m_TagString: enemy
   m_Icon: {fileID: 0}
@@ -79,7 +79,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0060292482, y: 0}
+  m_Offset: {x: 0.024971724, y: -0.068202496}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -90,7 +90,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.1689568, y: 1.55}
+  m_Size: {x: 0.8589456, y: 1.413595}
   m_EdgeRadius: 0
 --- !u!50 &612498131293116346
 Rigidbody2D:
@@ -151,7 +151,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 612498131379144928}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: ObstacleCheck
   m_TagString: Untagged
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
@@ -183,7 +183,7 @@ GameObject:
   - component: {fileID: 612498131420700815}
   - component: {fileID: 612498131420700813}
   - component: {fileID: 612498131420700814}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: EnemyAnimation
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -156,7 +156,7 @@ public class Player : MonoBehaviour {
             }else {
                 animator.Play("idle");
             }
-        }else {
+        } else {
             animator.SetBool("grounded",false);
         }
     }

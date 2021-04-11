@@ -12,6 +12,7 @@ TagManager:
   - largeFallingP
   - spikes
   - enemy
+  - Key
   layers:
   - Default
   - TransparentFX
@@ -24,7 +25,7 @@ TagManager:
   - Ground
   - Player
   - Obstacle
-  - 
+  - Enemy
   - 
   - 
   - 
