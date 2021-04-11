@@ -6,7 +6,7 @@ public class Key : MonoBehaviour {
     // Start is called before the first frame update
     private void OnTriggerEnter2D(Collider2D col) {
         if(col.gameObject.CompareTag("Player")) {
-            Debug.Log("Key picked up!");
+            Objectives.onKeyPicked?.Invoke();
             Destroy(gameObject);
         }
     }

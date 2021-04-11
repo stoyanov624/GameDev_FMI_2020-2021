@@ -10,24 +10,27 @@ public class Invulnerable : MonoBehaviour {
        color = rend.material.color;
     }
 
-    void OnCollisionEnter2D(Collision2D col) {
-        if(col.gameObject.CompareTag("spikes") || col.gameObject.CompareTag("enemy")) {
-            Debug.Log("hurt");
-            StartCoroutine("GetInvulnerable");
-        }
+    private void OnEnable() {
+        PlayerCollision.onDamageTakenDelegate += GetInvulnerabillity;
+    }
+
+    private void OnDisable() {
+         PlayerCollision.onDamageTakenDelegate -= GetInvulnerabillity;
+    }
+
+    private void GetInvulnerabillity() {
+        StartCoroutine("GetInvulnerable");
     }
 
     private IEnumerator GetInvulnerable() {
         Physics2D.IgnoreLayerCollision(9,10,true);
         Physics2D.IgnoreLayerCollision(9,11,true);
-        color = Color.red;
         color.a = 0.5f;
         rend.material.color = color;
         yield return new WaitForSeconds(3f);
 
         Physics2D.IgnoreLayerCollision(9,10,false);
         Physics2D.IgnoreLayerCollision(9,11,false);
-        color = Color.white;
         color.a = 1f;
         rend.material.color = color;
     }

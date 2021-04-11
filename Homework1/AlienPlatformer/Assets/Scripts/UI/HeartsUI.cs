@@ -2,12 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class HeartSystem : MonoBehaviour {
+public class HeartsUI : MonoBehaviour {
     [SerializeField] GameObject fullHeartPrefab;
     [SerializeField] GameObject brokenHeartPrefab;
     private List<GameObject> hearts = new List<GameObject>();
 
-    public void DrawHearts(int heartsCount) {
+    private void OnEnable() {
+        Health.drawHeartsDelegate += DrawHearts;
+        Health.onDamageTaken += TakeDamage;
+        Health.onPlayerDeath += RestoreHearts;
+    }
+
+    private void OnDisable() {
+        Health.drawHeartsDelegate -= DrawHearts;
+        Health.onDamageTaken -= TakeDamage;
+        Health.onPlayerDeath -= RestoreHearts;
+    }
+
+
+    private void DrawHearts(int heartsCount) {
         for (int i = 0; i < heartsCount; i++) {
             GameObject heart = Instantiate(fullHeartPrefab,transform.position,Quaternion.identity);
             heart.transform.SetParent(transform);
@@ -22,16 +35,7 @@ public class HeartSystem : MonoBehaviour {
         }
     }
 
-    public void TakeDamage(int lastHeart) {
-       if(lastHeart == 0) {
-           RestoreHearts();
-       } 
-       else {
-            hearts[lastHeart].GetComponent<Image>().sprite = brokenHeartPrefab.GetComponent<Image>().sprite;
-       }
-    }
-
-    public int getMaxLives() {
-        return hearts.Count;
+    private void TakeDamage(int heartsRemaining) {
+       hearts[heartsRemaining].GetComponent<Image>().sprite = brokenHeartPrefab.GetComponent<Image>().sprite;
     }
 }
