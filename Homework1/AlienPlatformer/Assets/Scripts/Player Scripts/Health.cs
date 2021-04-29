@@ -23,11 +23,8 @@ public class Health : MonoBehaviour {
         remainingLives = lives;
     }
 
-    // Update is called once per frame
     private void Update() {
         if(remainingLives == 0) {
-            LevelManager.instance.Respawn();
-            remainingLives = lives;
             onPlayerDeath?.Invoke();
         }
     }

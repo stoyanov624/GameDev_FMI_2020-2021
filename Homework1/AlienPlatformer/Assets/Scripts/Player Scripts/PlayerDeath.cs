@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerDeath : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D collider) {
         if(collider.gameObject.CompareTag("Lava")) {
-            LevelManager.instance.Respawn();
+            Health.onPlayerDeath?.Invoke();
         }
     }
 }

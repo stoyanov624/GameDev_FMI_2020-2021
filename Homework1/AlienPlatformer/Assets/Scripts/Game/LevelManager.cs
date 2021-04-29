@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 public class LevelManager : MonoBehaviour {
     public static LevelManager instance;
 
@@ -15,8 +16,7 @@ public class LevelManager : MonoBehaviour {
     }
 
     public void Respawn() {
-        playerTransform.position = playerRespawnPoint.position;
-        cam.setPlayerToFollow(playerTransform.gameObject);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public IEnumerator RespawnPlatform(Vector2 respawnPosition, string platformTag) {

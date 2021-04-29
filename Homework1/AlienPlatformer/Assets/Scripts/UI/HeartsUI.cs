@@ -10,13 +10,13 @@ public class HeartsUI : MonoBehaviour {
     private void OnEnable() {
         Health.drawHeartsDelegate += DrawHearts;
         Health.onDamageTaken += TakeDamage;
-        Health.onPlayerDeath += RestoreHearts;
+        Health.onPlayerDeath += LoseAllHearts;
     }
 
     private void OnDisable() {
         Health.drawHeartsDelegate -= DrawHearts;
         Health.onDamageTaken -= TakeDamage;
-        Health.onPlayerDeath -= RestoreHearts;
+        Health.onPlayerDeath -= LoseAllHearts;
     }
 
 
@@ -29,9 +29,10 @@ public class HeartsUI : MonoBehaviour {
         }
     }
 
-    private void RestoreHearts() {
-        for (int i = 0; i < hearts.Count; i++) {
-            hearts[i].GetComponent<Image>().sprite = fullHeartPrefab.GetComponent<Image>().sprite;
+    private void LoseAllHearts() {
+        int heartsCount = hearts.Count;
+        for (int i = 0; i < heartsCount; i++) {
+            hearts[i].GetComponent<Image>().sprite = brokenHeartPrefab.GetComponent<Image>().sprite;
         }
     }
 
