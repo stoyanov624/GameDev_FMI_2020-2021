@@ -31,5 +31,9 @@ public class Health : MonoBehaviour {
 
     private void OnHealthLose() {
         onDamageTaken?.Invoke(--remainingLives);
+
+        if(remainingLives == 1) {
+            EffectManager.instance.enabled = true;
+        }
     }
 }

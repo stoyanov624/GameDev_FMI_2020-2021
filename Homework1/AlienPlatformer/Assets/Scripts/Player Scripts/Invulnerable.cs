@@ -6,8 +6,13 @@ public class Invulnerable : MonoBehaviour {
     [SerializeField] private Renderer rend;
     private Color color;
 
+    private void Awake() {
+        Physics2D.IgnoreLayerCollision(9,10,false);
+       Physics2D.IgnoreLayerCollision(9,11,false);
+    }
+
     private void Start() {
-       color = rend.material.color;
+        color = rend.material.color;
     }
 
     private void OnEnable() {
