@@ -15,16 +15,13 @@ public class EffectManager : MonoBehaviour {
 
     private void Start() {
         volume.profile.TryGetSettings(out vignette);
-        
-        vignette.intensity.value = Mathf.Floor(Time.time);
-        
     }
 
     private void Update() {
-        //pumpEffect();
+        PumpEffect();
     }
 
-    private void pumpEffect() {
-        vignette.intensity.value = Mathf.Lerp(0.4f, 0.55f, Mathf.PingPong(Time.time,1f));
+    private void PumpEffect() {
+        vignette.intensity.value = Mathf.Lerp(0.45f, 0.55f, Mathf.PingPong(Time.time,1f));
     }
 }

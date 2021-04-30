@@ -9,27 +9,27 @@ public class EnemyScript : MonoBehaviour {
     [SerializeField] private float movementSpeed;
     private float moveDirection = 1;
     private bool facingRight = true;
-    [SerializeField] Transform edgeCheckPoint;
-    [SerializeField] Transform obstacleCheckPoint;
-    [SerializeField] float checkRadius;
-    [SerializeField] LayerMask groundLayer;
-    [SerializeField] LayerMask obstacleLayer;
+    [SerializeField] private Transform edgeCheckPoint;
+    [SerializeField] private Transform obstacleCheckPoint;
+    [SerializeField] private float checkRadius;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private LayerMask obstacleLayer;
     private bool isNearEdge;
     private bool isNearObstacle;
 
     [Header("Jump Attack")]
-    [SerializeField] float jumpForce;
-    [SerializeField] Transform player;
+    [SerializeField] private float jumpForce;
+    [SerializeField] private Transform player;
     
     [Header("Seeing Player")]
-    [SerializeField] Vector2 lineOfSite;
-    [SerializeField] LayerMask playerLayer;
+    [SerializeField] private Vector2 lineOfSite;
+    [SerializeField] private LayerMask playerLayer;
     private bool canSeePlayer;
     private bool isAbovePlayer;
     private bool shouldAttack;
 
     [Header("Components")]
-    [SerializeField] Animator animator;
+    [SerializeField] private Animator animator;
     private BoxCollider2D enemyBoxCollider2D;
     private Rigidbody2D enemyRb;
 
@@ -89,7 +89,7 @@ public class EnemyScript : MonoBehaviour {
         float playerPosition = player.position.x - transform.position.x;
         if(playerPosition < 0 && facingRight) {
             Flip();
-        }else if(playerPosition > 0 && !facingRight) {
+        } else if(playerPosition > 0 && !facingRight) {
             Flip();
         }
     }
@@ -104,5 +104,11 @@ public class EnemyScript : MonoBehaviour {
     private bool isGrounded() {
         RaycastHit2D reycastHit2d = Physics2D.BoxCast(enemyBoxCollider2D.bounds.center,enemyBoxCollider2D.bounds.size,0f,Vector2.down,.1f,groundLayer);
         return reycastHit2d.collider != null;
+    }
+
+    public void setTarget(Transform target) {
+        if(target != null) {
+            player = target;
+        } 
     }
 }

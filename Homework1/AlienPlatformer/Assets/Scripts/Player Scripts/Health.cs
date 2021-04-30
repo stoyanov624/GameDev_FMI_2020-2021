@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Health : MonoBehaviour {
-    [SerializeField] private int lives;
-    private int remainingLives;
+    [SerializeField] private int lives = 3;
+    public int RemainingLives {get; set;}
     public static Action<int> drawHeartsDelegate;
     public static Action<int> onDamageTaken;
     public static Action onPlayerDeath;
@@ -20,19 +20,19 @@ public class Health : MonoBehaviour {
     
     private void Start() {
         drawHeartsDelegate?.Invoke(lives);
-        remainingLives = lives;
+        RemainingLives = lives;
     }
 
     private void Update() {
-        if(remainingLives == 0) {
+        if(RemainingLives == 0) {
             onPlayerDeath?.Invoke();
         }
     }
 
     private void OnHealthLose() {
-        onDamageTaken?.Invoke(--remainingLives);
-
-        if(remainingLives == 1) {
+        RemainingLives--;
+        onDamageTaken?.Invoke(RemainingLives);
+        if(RemainingLives == 1) {
             EffectManager.instance.enabled = true;
         }
     }
