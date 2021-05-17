@@ -30,7 +30,8 @@ public class DeathMenu : MonoBehaviour {
 
     private IEnumerator WaitBeforeMenuPop() {
         panel.SetActive(true);
-        yield return new WaitForSeconds(0.5f);
+        this.enabled = false;
+        yield return new WaitForSeconds(1f);
         Time.timeScale = 0.0f;
     }
 }

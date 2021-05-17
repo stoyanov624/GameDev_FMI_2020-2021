@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] private float linearDrag = 10f;
     [SerializeField] private float maxSpeed = 8f; // limiting the addForce.
     private float moveDirection = 1;
+    private Vector2 inputVector;
     private int xInput;
     private bool shouldFlip => (xInput != 0.0f && xInput != moveDirection);
     private bool isGrounded;
@@ -22,7 +23,8 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void Update() {
-        xInput = GetXInput();
+        GetInput();
+        xInput = (int)(inputVector * Vector2.right).normalized.x;
     }
 
     private void FixedUpdate() {
@@ -34,7 +36,7 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void MoveCharacter() {
-        playerRB.AddForce(new Vector2(xInput,0.0f) * movementSpeed);
+        playerRB.AddForce(new Vector2(xInput, 0.0f) * movementSpeed);
         
         if(Mathf.Abs(playerRB.velocity.x) > maxSpeed) {
             playerRB.velocity = new Vector2(Mathf.Sign(playerRB.velocity.x) * maxSpeed,playerRB.velocity.y);
@@ -58,7 +60,7 @@ public class PlayerMovement : MonoBehaviour {
         transform.Rotate(0.0f, 180.0f, 0.0f);
     }
 
-    private int GetXInput() {
-        return (int)(new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"))).normalized.x;
-    } 
+    private void GetInput() {
+        inputVector =  new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+    }
 }
