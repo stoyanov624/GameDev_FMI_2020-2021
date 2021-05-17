@@ -27,6 +27,7 @@ public class Health : MonoBehaviour {
     private void Update() {
         if(RemainingLives == 0) {
             onPlayerDeath?.Invoke();
+            gameObject.SetActive(false);
         }
     }
 

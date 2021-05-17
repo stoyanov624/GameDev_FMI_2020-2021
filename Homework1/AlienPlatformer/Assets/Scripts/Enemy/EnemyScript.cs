@@ -120,6 +120,7 @@ public class EnemyScript : MonoBehaviour {
 
     public IEnumerator Die() {
         explosionEffect.SetActive(true);
+        SoundManager.instance.PlaySound("enemyDeathSound");
         enemyRb.AddForce(Vector2.up * 25f, ForceMode2D.Impulse);
         spriteRenderer.material = dmgMaterial;
         

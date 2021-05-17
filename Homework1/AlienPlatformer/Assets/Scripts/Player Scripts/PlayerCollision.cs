@@ -35,6 +35,7 @@ public class PlayerCollision : MonoBehaviour {
     private IEnumerator Boost() {
         yield return new WaitForSeconds(0.55f); 
         playerRB.AddForce(Vector2.up * 30f, ForceMode2D.Impulse);
+        SoundManager.instance.PlaySound("trampolineSound");
         yield return 0;
     }
 
@@ -56,6 +57,7 @@ public class PlayerCollision : MonoBehaviour {
         }
 
         if(other.gameObject.CompareTag("spikes") || other.gameObject.CompareTag("enemy")) {
+            SoundManager.instance.PlaySound("hurtSound");
             onDamageTakenDelegate?.Invoke();
             playerRB.AddForce(Vector2.up * 15f, ForceMode2D.Impulse);
         }

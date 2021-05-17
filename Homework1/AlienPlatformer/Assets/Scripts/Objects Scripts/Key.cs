@@ -7,6 +7,7 @@ public class Key : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D col) {
         if(col.gameObject.CompareTag("Player")) {
             Objectives.onKeyPicked?.Invoke();
+            SoundManager.instance.PlaySound("keyCollectSound");
             Destroy(gameObject);
         }
     }

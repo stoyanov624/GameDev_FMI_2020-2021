@@ -13,6 +13,7 @@ public class LaserShooter : MonoBehaviour {
         if (Input.GetButtonDown("Fire1")) {
             onShootingAction?.Invoke();
             StartCoroutine(Shoot());
+            SoundManager.instance.PlaySound("laserSound");
         }
     }
 

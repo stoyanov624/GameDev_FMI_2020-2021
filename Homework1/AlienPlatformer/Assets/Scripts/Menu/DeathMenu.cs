@@ -15,6 +15,8 @@ public class DeathMenu : MonoBehaviour {
     }
 
     private void OnDeath() {
+        SoundManager.instance.StopSound("theme");
+        SoundManager.instance.PlaySound("gameOverSound");
         StartCoroutine(WaitBeforeMenuPop());
     }
 

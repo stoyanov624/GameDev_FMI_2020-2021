@@ -16,6 +16,8 @@ public class LevelCompleteMenu : MonoBehaviour {
     }
 
     private void CompleteLevel() {
+        SoundManager.instance.StopSound("theme");
+        SoundManager.instance.PlaySound("levelCompleteSound");
         panel.SetActive(true);
         Time.timeScale = 0.0f;
     }

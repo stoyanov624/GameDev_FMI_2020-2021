@@ -24,6 +24,7 @@ public class Objectives : MonoBehaviour {
 
     private void invokeLevelCompleteCheck() {
         if(keysToPick == 0) {
+            SoundManager.instance.PlaySound("openDoorSound");
             onLevelComplete?.Invoke();
         }
     }

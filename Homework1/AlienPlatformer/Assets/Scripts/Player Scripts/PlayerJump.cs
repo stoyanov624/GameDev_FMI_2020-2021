@@ -62,6 +62,8 @@ public class PlayerJump : MonoBehaviour {
         playerRB.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         jumpKeyPressed = false;
         jumpTimer = 0;
+
+        SoundManager.instance.PlaySound("jumpSound");
     }
 
 
