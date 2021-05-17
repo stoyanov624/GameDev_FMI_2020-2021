@@ -9,6 +9,7 @@ public class Health : MonoBehaviour {
     public static Action<int> drawHeartsDelegate;
     public static Action<int> onDamageTaken;
     public static Action onPlayerDeath;
+    public static Action onLastHeart;
 
     private void OnEnable() {
         PlayerCollision.onDamageTakenDelegate += OnHealthLose;
@@ -33,7 +34,7 @@ public class Health : MonoBehaviour {
         RemainingLives--;
         onDamageTaken?.Invoke(RemainingLives);
         if(RemainingLives == 1) {
-            EffectManager.instance.enabled = true;
+            onLastHeart?.Invoke();
         }
     }
 }

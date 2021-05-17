@@ -8,15 +8,17 @@ public class AnimationHandler : MonoBehaviour {
     [SerializeField] Animator animator;
     
     private void Update() {
-        isMoveKeyPressed = Input.GetButton("Horizontal");
+        isMoveKeyPressed = Input.GetAxisRaw("Horizontal") != 0;
         AnimateMovement();
     }
 
     private void OnEnable() {
+        LaserShooter.onShootingAction += ShootAnimation;
         PlayerCollision.onDamageTakenDelegate += HurtAnimation;
     }
 
     private void OnDisable() {
+        LaserShooter.onShootingAction -= ShootAnimation;
         PlayerCollision.onDamageTakenDelegate -= HurtAnimation;
     }
 
@@ -34,6 +36,10 @@ public class AnimationHandler : MonoBehaviour {
     }
 
     private void HurtAnimation() {
-        animator.Play("hurt");
+        animator.SetTrigger("hurt");
+    }
+
+    private void ShootAnimation() {
+        animator.SetTrigger("shoot");
     }
 }

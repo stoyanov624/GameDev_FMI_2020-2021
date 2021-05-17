@@ -26,7 +26,7 @@ public class PlayerJump : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         
-        if(Input.GetKeyDown("w")) {
+        if(Input.GetButtonDown("Jump")) {
             jumpKeyPressed = true;
             jumpTimer = Time.time + jumpDelay;
         }

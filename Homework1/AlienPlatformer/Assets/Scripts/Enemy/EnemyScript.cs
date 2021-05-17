@@ -30,12 +30,18 @@ public class EnemyScript : MonoBehaviour {
 
     [Header("Components")]
     [SerializeField] private Animator animator;
-    private BoxCollider2D enemyBoxCollider2D;
+    [SerializeField] private GameObject explosionEffect;
+    [SerializeField] private SpriteRenderer spriteRenderer;
     private Rigidbody2D enemyRb;
+    private Material dmgMaterial;
+    private Material defaultMaterial;
+    private BoxCollider2D enemyBoxCollider2D;
 
     void Start() {
         enemyRb = GetComponent<Rigidbody2D>();
         enemyBoxCollider2D = GetComponent<BoxCollider2D>();
+        dmgMaterial = Resources.Load("Prefabs/RedFlash", typeof(Material)) as Material;
+        defaultMaterial = spriteRenderer.material;
     }
 
     void FixedUpdate() {
@@ -110,5 +116,19 @@ public class EnemyScript : MonoBehaviour {
         if(target != null) {
             player = target;
         } 
+    }
+
+    public IEnumerator Die() {
+        explosionEffect.SetActive(true);
+        enemyRb.AddForce(Vector2.up * 25f, ForceMode2D.Impulse);
+        spriteRenderer.material = dmgMaterial;
+        
+        yield return new WaitForSeconds(0.1f);
+
+        enemyBoxCollider2D.enabled = false;
+        spriteRenderer.material = defaultMaterial;
+
+        yield return new WaitForSeconds(3f);
+        Destroy(gameObject);
     }
 }

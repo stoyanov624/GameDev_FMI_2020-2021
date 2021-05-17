@@ -29,8 +29,8 @@ public class DeathMenu : MonoBehaviour {
     }
 
     private IEnumerator WaitBeforeMenuPop() {
-        yield return new WaitForSeconds(0.5f);
         panel.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
         Time.timeScale = 0.0f;
     }
 }
