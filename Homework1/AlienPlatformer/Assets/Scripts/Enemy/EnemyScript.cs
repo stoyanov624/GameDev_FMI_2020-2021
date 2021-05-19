@@ -19,7 +19,7 @@ public class EnemyScript : MonoBehaviour {
 
     [Header("Jump Attack")]
     [SerializeField] private float jumpForce;
-    [SerializeField] private Transform player;
+    private Transform player;
     
     [Header("Seeing Player")]
     [SerializeField] private Vector2 lineOfSite;
@@ -40,6 +40,7 @@ public class EnemyScript : MonoBehaviour {
     void Start() {
         enemyRb = GetComponent<Rigidbody2D>();
         enemyBoxCollider2D = GetComponent<BoxCollider2D>();
+        player = GameObject.FindGameObjectWithTag("Player").transform;
         dmgMaterial = Resources.Load("Prefabs/RedFlash", typeof(Material)) as Material;
         defaultMaterial = spriteRenderer.material;
     }
@@ -64,7 +65,7 @@ public class EnemyScript : MonoBehaviour {
         FlipTowardsPlayer();
         float distanceFromPlayer = Vector2.Distance(transform.position,player.position);
         if(isGrounded()) {
-            enemyRb.AddForce(new Vector2(distanceFromPlayer,jumpForce),ForceMode2D.Impulse);
+            enemyRb.AddForce(new Vector2(distanceFromPlayer ,jumpForce),ForceMode2D.Impulse);
         }
     }
 
@@ -81,7 +82,7 @@ public class EnemyScript : MonoBehaviour {
             }else if((isNearEdge || isNearObstacle) && !facingRight) {
                 Flip();
             }
-            enemyRb.velocity = new Vector2(movementSpeed*moveDirection,enemyRb.velocity.y);
+            enemyRb.velocity = new Vector2(movementSpeed * moveDirection,enemyRb.velocity.y);
         }
     }
 

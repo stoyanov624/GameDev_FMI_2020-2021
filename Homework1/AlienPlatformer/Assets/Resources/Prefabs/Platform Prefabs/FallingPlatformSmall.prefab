@@ -144,6 +144,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2926794768779485212, guid: 2b25ede3467c8bf4e837751bf2f5e051,
         type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: f22dddd4bb3868e458ae68e90106dbfe, type: 2}
+    - target: {fileID: 2926794768779485212, guid: 2b25ede3467c8bf4e837751bf2f5e051,
+        type: 3}
       propertyPath: m_Offset.x
       value: 0.009907007
       objectReference: {fileID: 0}
@@ -155,12 +160,17 @@ PrefabInstance:
     - target: {fileID: 5674400452996622565, guid: 2b25ede3467c8bf4e837751bf2f5e051,
         type: 3}
       propertyPath: m_Name
-      value: FallingPlatformSmall (1)
+      value: FallingPlatformSmall
       objectReference: {fileID: 0}
     - target: {fileID: 5674400452996622565, guid: 2b25ede3467c8bf4e837751bf2f5e051,
         type: 3}
       propertyPath: m_TagString
       value: smallFallingP
+      objectReference: {fileID: 0}
+    - target: {fileID: 5674400452996622565, guid: 2b25ede3467c8bf4e837751bf2f5e051,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b25ede3467c8bf4e837751bf2f5e051, type: 3}

@@ -11,6 +11,7 @@ public class MovingPlatform : MonoBehaviour {
     void Start() {
         startPosition = transform.position;
         endPosition = new Vector2(transform.position.x + 3f,transform.position.y);
+        
     }
     
     void Update() {
