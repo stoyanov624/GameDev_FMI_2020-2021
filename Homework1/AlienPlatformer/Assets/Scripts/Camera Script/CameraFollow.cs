@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour {
-    [SerializeField] private GameObject player;
+    private GameObject player;
     [SerializeField] private Vector3 offset;
     [SerializeField] private float cameraFollowSpeed = 3f;
     private float smoothSpeed;
@@ -16,12 +16,13 @@ public class CameraFollow : MonoBehaviour {
     private Transform playerTransform;
     private Rigidbody2D playerRb;
 
-    void Start() {
-        playerTransform = player.GetComponent<Transform>();
+    private void Start() {
+        player = GameObject.FindGameObjectWithTag("Player");
+        playerTransform = player.transform;
         playerRb = player.GetComponent<Rigidbody2D>();
     }
 
-    void FixedUpdate() {
+    private void FixedUpdate() {
         Follow();
     }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class DeathMenu : MonoBehaviour {
     
-    [SerializeField] GameObject panel;
+    [SerializeField] private GameObject panel;
 
     private void OnEnable() {
         Health.onPlayerDeath += OnDeath;

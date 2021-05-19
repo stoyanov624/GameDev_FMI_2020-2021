@@ -10,15 +10,15 @@ public class LargePlatformGenerator : MonoBehaviour {
     
     private GameObject leftDecor;
     private GameObject rightDecor;
-    private GameObject platform;
+    public GameObject Platform {get; set;}
 
     private void Awake() {
         int decorationsCount = decorations.Count;
         int platformTypesCount = platformTypes.Count;
-        
+
+        GeneratePlatformType(platformTypesCount);
         GenerateLeftDecoration(decorationsCount);
         GenerateRightDecoration(decorationsCount);
-        GeneratePlatformType(platformTypesCount);
     }
    
 
@@ -28,6 +28,8 @@ public class LargePlatformGenerator : MonoBehaviour {
         rightDecor = GameObject.Instantiate(decorations[randomDecoration], 
                                     new Vector2(randomRightPosX, rightDecorationPos.position.y), 
                                     Quaternion.identity);
+        
+        rightDecor.transform.SetParent(Platform.transform);
     }
 
     private void GenerateLeftDecoration(int  decorationCounts) {
@@ -36,15 +38,16 @@ public class LargePlatformGenerator : MonoBehaviour {
         leftDecor = GameObject.Instantiate(decorations[randomDecoration], 
                                     new Vector2(randomLeftPosX, leftDecorationPos.position.y),
                                      Quaternion.identity);
+
+        leftDecor.transform.SetParent(Platform.transform);
     }
 
     private void GeneratePlatformType(int platformTypesCount) {
         int randomPlatformType = Random.Range(0, platformTypesCount);
 
-        platform = GameObject.Instantiate (platformTypes[randomPlatformType], 
+        Platform = GameObject.Instantiate (platformTypes[randomPlatformType], 
                                     transform.position, Quaternion.identity);
-
-        leftDecor.transform.SetParent(platform.transform);
-        rightDecor.transform.SetParent(platform.transform);
+        
+        Platform.transform.SetParent(transform);
     }
 }

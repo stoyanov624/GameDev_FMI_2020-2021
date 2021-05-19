@@ -4,12 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class LevelManager : MonoBehaviour {
     public static LevelManager instance;
-
-    [SerializeField] private Transform playerRespawnPoint;
-    [SerializeField] private Transform playerTransform;
-    [SerializeField] private GameObject smallFallingPlatformPrefab;
-    [SerializeField] private GameObject largeFallingPlatformPrefab;
-    [SerializeField] private CameraFollow cam;
+    private GameObject fallingPlatformReference;
 
     private void Awake() {
         instance = this;
@@ -19,13 +14,10 @@ public class LevelManager : MonoBehaviour {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    public IEnumerator RespawnPlatform(Vector2 respawnPosition, string platformTag) {
+    public IEnumerator RespawnPlatform(Vector2 respawnPosition, string platformTag, GameObject platformObj) {
         yield return new WaitForSeconds(2f);
-        if(platformTag.Equals("smallFallingP")) {
-            Instantiate(smallFallingPlatformPrefab,respawnPosition,Quaternion.identity);
-        }
-        else if(platformTag.Equals("largeFallingP")) {
-            Instantiate(largeFallingPlatformPrefab,respawnPosition,Quaternion.identity);
-        }
+        fallingPlatformReference = platformObj;
+        Instantiate(fallingPlatformReference,respawnPosition,Quaternion.identity);
+        Destroy(platformObj);
     }
 }

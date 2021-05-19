@@ -4947,7 +4947,7 @@ MonoBehaviour:
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 1024
-  jumpForce: 15
+  jumpForce: 8
   lineOfSite: {x: 4.27, y: 5.02}
   playerLayer:
     serializedVersion: 2

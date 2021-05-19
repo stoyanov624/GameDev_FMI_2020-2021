@@ -65,7 +65,7 @@ public class EnemyScript : MonoBehaviour {
         FlipTowardsPlayer();
         float distanceFromPlayer = Vector2.Distance(transform.position,player.position);
         if(isGrounded()) {
-            enemyRb.AddForce(new Vector2(distanceFromPlayer ,jumpForce),ForceMode2D.Impulse);
+            enemyRb.AddForce(new Vector2(distanceFromPlayer * moveDirection * movementSpeed * 2f ,jumpForce),ForceMode2D.Impulse);
         }
     }
 

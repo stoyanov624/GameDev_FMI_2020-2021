@@ -13,6 +13,8 @@ TagManager:
   - spikes
   - enemy
   - Key
+  - LevelComplete
+  - DeathPanel
   layers:
   - Default
   - TransparentFX
